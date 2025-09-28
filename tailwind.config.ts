@@ -19,13 +19,33 @@ export default {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        
+        // Cricket fantasy colors
+        "cricket-green": {
+          DEFAULT: "hsl(var(--cricket-green))",
+          light: "hsl(var(--cricket-green-light))",
+          dark: "hsl(var(--cricket-green-dark))",
+        },
+        "fantasy-gold": {
+          DEFAULT: "hsl(var(--fantasy-gold))",
+          light: "hsl(var(--fantasy-gold-light))",
+        },
+        "fantasy-blue": {
+          DEFAULT: "hsl(var(--fantasy-blue))",
+          light: "hsl(var(--fantasy-blue-light))",
+        },
+        "team-primary": "hsl(var(--team-primary))",
+        "team-secondary": "hsl(var(--team-secondary))",
+        
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          hover: "hsl(var(--primary-hover))",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
+          hover: "hsl(var(--secondary-hover))",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
@@ -38,6 +58,15 @@ export default {
         accent: {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
+          hover: "hsl(var(--accent-hover))",
+        },
+        success: {
+          DEFAULT: "hsl(var(--success))",
+          foreground: "hsl(var(--success-foreground))",
+        },
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
+          foreground: "hsl(var(--warning-foreground))",
         },
         popover: {
           DEFAULT: "hsl(var(--popover))",
@@ -46,6 +75,7 @@ export default {
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
+          hover: "hsl(var(--card-hover))",
         },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
@@ -57,6 +87,20 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+      },
+      backgroundImage: {
+        "gradient-cricket": "var(--gradient-cricket)",
+        "gradient-fantasy": "var(--gradient-fantasy)",
+        "gradient-success": "var(--gradient-success)",
+      },
+      boxShadow: {
+        "card": "var(--shadow-card)",
+        "player": "var(--shadow-player)",
+        "selected": "var(--shadow-selected)",
+      },
+      transitionTimingFunction: {
+        "smooth": "var(--transition-smooth)",
+        "bounce": "var(--transition-bounce)",
       },
       borderRadius: {
         lg: "var(--radius)",

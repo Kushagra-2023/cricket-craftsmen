@@ -2,41 +2,80 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Cricket Fantasy Sports Design System - All colors MUST be HSL */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Base colors */
+    --background: 210 20% 98%;
+    --foreground: 215 25% 15%;
 
+    /* Cricket field inspired colors */
+    --cricket-green: 120 35% 25%;
+    --cricket-green-light: 120 30% 35%;
+    --cricket-green-dark: 120 40% 15%;
+    
+    /* Fantasy sports accent colors */
+    --fantasy-gold: 45 90% 55%;
+    --fantasy-gold-light: 45 85% 65%;
+    --fantasy-blue: 210 85% 50%;
+    --fantasy-blue-light: 210 80% 60%;
+    
+    /* Team colors */
+    --team-primary: 210 85% 50%;
+    --team-secondary: 25 85% 55%;
+
+    /* Card system */
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 215 25% 15%;
+    --card-hover: 210 15% 96%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    /* Interactive elements */
+    --primary: 120 35% 25%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 120 40% 20%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --secondary: 210 15% 90%;
+    --secondary-foreground: 215 25% 15%;
+    --secondary-hover: 210 20% 85%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --accent: 45 90% 55%;
+    --accent-foreground: 215 25% 15%;
+    --accent-hover: 45 85% 50%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Status colors */
+    --success: 120 50% 45%;
+    --success-foreground: 0 0% 100%;
+    
+    --warning: 45 90% 55%;
+    --warning-foreground: 215 25% 15%;
+    
+    --destructive: 0 85% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Utility colors */
+    --muted: 210 15% 92%;
+    --muted-foreground: 215 15% 45%;
+    
+    --border: 210 20% 88%;
+    --input: 210 20% 88%;
+    --ring: 120 35% 25%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    /* Gradients */
+    --gradient-cricket: linear-gradient(135deg, hsl(var(--cricket-green)), hsl(var(--cricket-green-light)));
+    --gradient-fantasy: linear-gradient(135deg, hsl(var(--fantasy-blue)), hsl(var(--fantasy-gold)));
+    --gradient-success: linear-gradient(135deg, hsl(var(--success)), hsl(120 45% 55%));
+    
+    /* Shadows */
+    --shadow-card: 0 4px 12px hsl(var(--cricket-green) / 0.15);
+    --shadow-player: 0 8px 24px hsl(var(--fantasy-blue) / 0.2);
+    --shadow-selected: 0 0 0 3px hsl(var(--fantasy-gold) / 0.4);
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
 
@@ -67,15 +106,18 @@ All colors MUST be HSL.
 
     --primary: 210 40% 98%;
     --primary-foreground: 222.2 47.4% 11.2%;
+    --primary-hover: 210 35% 90%;
 
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
+    --secondary-hover: 217.2 35% 25%;
 
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
 
     --accent: 217.2 32.6% 17.5%;
     --accent-foreground: 210 40% 98%;
+    --accent-hover: 217.2 35% 25%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
@@ -83,6 +125,9 @@ All colors MUST be HSL.
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
+    
+    --card-hover: 217.2 35% 20%;
+    
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
