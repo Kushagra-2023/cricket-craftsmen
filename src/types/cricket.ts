@@ -23,6 +23,8 @@ export interface Team {
   players: Player[];
 }
 
+export type CricketFormat = 'T20' | 'ODI' | 'Test';
+
 export interface FantasyTeam {
   id: string;
   name: string;
@@ -33,6 +35,7 @@ export interface FantasyTeam {
 }
 
 export interface TeamSelectionState {
+  selectedFormat?: CricketFormat;
   selectedTeams: Team[];
   availablePlayers: Player[];
   fantasyTeam: FantasyTeam;

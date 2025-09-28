@@ -1,20 +1,23 @@
 import { useState } from "react";
-import { Team, Player, FantasyTeam, TeamSelectionState } from "@/types/cricket";
+import { Team, Player, FantasyTeam, TeamSelectionState, CricketFormat } from "@/types/cricket";
 import { mockTeams } from "@/data/cricketData";
 import { CricketHero } from "@/components/CricketHero";
 import { TeamSelector } from "@/components/TeamSelector";
 import { FantasyTeamBuilder } from "@/components/FantasyTeamBuilder";
+import { FormatSelector } from "@/components/FormatSelector";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, RefreshCw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
-type AppStep = 'hero' | 'team-selection' | 'team-building';
+type AppStep = 'hero' | 'format-selection' | 'team-selection' | 'team-building';
 
 const Index = () => {
   const { toast } = useToast();
   const [currentStep, setCurrentStep] = useState<AppStep>('hero');
   const [gameState, setGameState] = useState<TeamSelectionState>({
+    selectedFormat: undefined,
     selectedTeams: [],
     availablePlayers: [],
     fantasyTeam: {
@@ -28,6 +31,14 @@ const Index = () => {
   });
 
   const handleGetStarted = () => {
+    setCurrentStep('format-selection');
+  };
+
+  const handleFormatSelect = (format: CricketFormat) => {
+    setGameState(prev => ({
+      ...prev,
+      selectedFormat: format,
+    }));
     setCurrentStep('team-selection');
   };
 
@@ -146,6 +157,7 @@ const Index = () => {
 
   const handleReset = () => {
     setGameState({
+      selectedFormat: undefined,
       selectedTeams: [],
       availablePlayers: [],
       fantasyTeam: {
@@ -168,6 +180,10 @@ const Index = () => {
     setCurrentStep('team-selection');
   };
 
+  const handleBackToFormatSelection = () => {
+    setCurrentStep('format-selection');
+  };
+
   if (currentStep === 'hero') {
     return <CricketHero onGetStarted={handleGetStarted} />;
   }
@@ -181,7 +197,13 @@ const Index = () => {
             <div className="flex items-center space-x-4">
               <Button
                 variant="ghost"
-                onClick={currentStep === 'team-building' ? handleBackToTeamSelection : () => setCurrentStep('hero')}
+                onClick={
+                  currentStep === 'team-building' 
+                    ? handleBackToTeamSelection 
+                    : currentStep === 'team-selection' 
+                    ? handleBackToFormatSelection 
+                    : () => setCurrentStep('hero')
+                }
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back
@@ -191,6 +213,11 @@ const Index = () => {
               </h1>
             </div>
             <div className="flex items-center space-x-2">
+              {gameState.selectedFormat && (
+                <Badge variant="outline" className="bg-fantasy-blue/10 text-fantasy-blue border-fantasy-blue/20">
+                  {gameState.selectedFormat}
+                </Badge>
+              )}
               {gameState.selectedTeams.length > 0 && (
                 <div className="flex items-center space-x-2 text-sm">
                   <span className="text-muted-foreground">Teams:</span>
@@ -213,6 +240,13 @@ const Index = () => {
 
       {/* Main Content */}
       <div className="container mx-auto px-6 py-8">
+        {currentStep === 'format-selection' && (
+          <FormatSelector
+            selectedFormat={gameState.selectedFormat}
+            onFormatSelect={handleFormatSelect}
+          />
+        )}
+
         {currentStep === 'team-selection' && (
           <TeamSelector
             teams={mockTeams}
