@@ -225,7 +225,9 @@ export const FantasyTeamBuilder = ({
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-sky-400 via-green-400 to-green-600">
 
       {/* Stats Header */}
-      <div className="bg-white/90 backdrop-blur-sm p-4 shadow-lg sticky top-0 z-20">
+      {/* <div className="bg-white/90 backdrop-blur-sm p-4 shadow-lg sticky top-0 z-20"> */}
+      <div className="bg-white/90 backdrop-blur-sm p-4 shadow-lg sticky top-16 z-30">
+
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-6xl mx-auto">
           <div className="text-center">
             <div className="flex items-center justify-center w-10 h-10 bg-blue-600 rounded-full mx-auto mb-1">
