@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Player, FantasyTeam } from "@/types/cricket";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Trophy, DollarSign, Users, RotateCcw, X, Shuffle, MessageSquare } from "lucide-react";
 import { FantasyChatbot } from "./LLM";
+import * as Toast from "./ui/toast";
+
 
 interface FantasyTeamBuilderProps {
   availablePlayers: Player[];
@@ -90,6 +92,12 @@ export const FantasyTeamBuilder = ({
     .sort((a, b) => b.points - a.points);
   const filteredPlayers = activeTab === "All" ? sortedPlayers : sortedPlayers.filter((p) => p.position === activeTab);
 
+  useEffect(() => {
+  if (lastSwap) {
+    const timer = setTimeout(() => setLastSwap(null), 2000); // hide after 2 seconds
+    return () => clearTimeout(timer);
+  }
+}, [lastSwap]);
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-sky-400 via-green-400 to-green-600">
       {/* 1️⃣ HEADER STRIP */}
@@ -232,11 +240,22 @@ export const FantasyTeamBuilder = ({
 
       {/* Swap Info Toast */}
       {lastSwap && (
+        <div
+          className={`fixed bottom-4 right-4 bg-yellow-100 p-3 rounded-lg shadow-lg text-sm transition-opacity duration-700 ${
+            lastSwap ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          Swapped{" "}
+          <span className="font-semibold">{lastSwap.out.name}</span> ↔️{" "}
+          <span className="font-semibold">{lastSwap.in.name}</span>
+        </div>
+      )}
+      {/* {lastSwap && (
         <div className="fixed bottom-4 right-4 bg-yellow-100 p-3 rounded-lg shadow-lg text-sm">
           Swapped <span className="font-semibold">{lastSwap.out.name}</span> ↔️{" "}
           <span className="font-semibold">{lastSwap.in.name}</span>
         </div>
-      )}
+      )} */}
     </div>
   );
 };
