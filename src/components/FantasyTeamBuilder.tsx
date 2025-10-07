@@ -6,7 +6,6 @@ import { Trophy, DollarSign, Users, RotateCcw, X, Shuffle, MessageSquare } from 
 import { FantasyChatbot } from "./LLM";
 import * as Toast from "./ui/toast";
 
-
 interface FantasyTeamBuilderProps {
   availablePlayers: Player[];
   fantasyTeam: FantasyTeam;
@@ -27,7 +26,9 @@ export const FantasyTeamBuilder = ({
 
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
   const [swapMode, setSwapMode] = useState(false);
-  const [activeTab, setActiveTab] = useState<"All" | "Batsman" | "Bowler" | "Wicket-Keeper" | "All-Rounder">("All");
+  const [activeTab, setActiveTab] = useState<
+    "All" | "Batsman" | "Bowler" | "Wicket-Keeper" | "All-Rounder"
+  >("All");
   const [lastSwap, setLastSwap] = useState<{ out: Player; in: Player } | null>(null);
   const [assistantOpen, setAssistantOpen] = useState(false);
 
@@ -52,11 +53,12 @@ export const FantasyTeamBuilder = ({
     if (!swapMode && canAddMore) onPlayerAdd(player);
   };
 
-  const getPositionCount = (pos: string) => fantasyTeam.players.filter((p) => p.position === pos).length;
+  const getPositionCount = (pos: string) =>
+    fantasyTeam.players.filter((p) => p.position === pos).length;
 
   const positionColors: Record<string, string> = {
-    "Batsman": "bg-blue-500",
-    "Bowler": "bg-red-500",
+    Batsman: "bg-blue-500",
+    Bowler: "bg-red-500",
     "Wicket-Keeper": "bg-green-500",
     "All-Rounder": "bg-purple-500",
   };
@@ -64,7 +66,7 @@ export const FantasyTeamBuilder = ({
   const getFieldPosition = (player: Player) => {
     const positions: Record<string, any[]> = {
       "Wicket-Keeper": [{ bottom: "12%", left: "50%", transform: "translateX(-50%)" }],
-      "Batsman": [
+      Batsman: [
         { bottom: "30%", left: "15%" },
         { bottom: "30%", left: "35%" },
         { bottom: "30%", right: "15%" },
@@ -76,31 +78,44 @@ export const FantasyTeamBuilder = ({
         { bottom: "60%", right: "20%" },
         { bottom: "70%", left: "50%", transform: "translateX(-50%)" },
       ],
-      "Bowler": [
+      Bowler: [
         { bottom: "85%", left: "20%" },
         { bottom: "85%", right: "20%" },
         { bottom: "90%", left: "50%", transform: "translateX(-50%)" },
       ],
     };
-    const playersByPosition = fantasyTeam.players.filter((p) => p.position === player.position);
+    const playersByPosition = fantasyTeam.players.filter(
+      (p) => p.position === player.position
+    );
     const idx = playersByPosition.findIndex((p) => p.id === player.id);
-    return positions[player.position]?.[idx] ?? { bottom: "50%", left: "50%", transform: "translateX(-50%)" };
+    return (
+      positions[player.position]?.[idx] ?? {
+        bottom: "50%",
+        left: "50%",
+        transform: "translateX(-50%)",
+      }
+    );
   };
 
   const sortedPlayers = availablePlayers
     .filter((p) => !fantasyTeam.players.some((fp) => fp.id === p.id))
     .sort((a, b) => b.points - a.points);
-  const filteredPlayers = activeTab === "All" ? sortedPlayers : sortedPlayers.filter((p) => p.position === activeTab);
+  const filteredPlayers =
+    activeTab === "All"
+      ? sortedPlayers
+      : sortedPlayers.filter((p) => p.position === activeTab);
 
+  // 🕒 Auto-hide last swap after 2 seconds
   useEffect(() => {
-  if (lastSwap) {
-    const timer = setTimeout(() => setLastSwap(null), 2000); // hide after 2 seconds
-    return () => clearTimeout(timer);
-  }
-}, [lastSwap]);
+    if (lastSwap) {
+      const timer = setTimeout(() => setLastSwap(null), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [lastSwap]);
+
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-sky-400 via-green-400 to-green-600">
-      {/* 1️⃣ HEADER STRIP */}
+      {/* 1️⃣ HEADER */}
       <div className="bg-white/90 backdrop-blur-sm p-4 shadow-lg sticky top-0 z-30">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-6xl mx-auto">
           <div className="text-center">
@@ -152,15 +167,19 @@ export const FantasyTeamBuilder = ({
               className={`justify-center p-2 ${positionColors[pos]} bg-opacity-20 text-black`}
             >
               {pos}: {getPositionCount(pos)}/
-              {pos === "Batsman" || pos === "Bowler" ? 6 : pos === "All-Rounder" ? 4 : 2}
+              {pos === "Batsman" || pos === "Bowler"
+                ? 6
+                : pos === "All-Rounder"
+                ? 4
+                : 2}
             </Badge>
           ))}
         </div>
       </div>
 
-      {/* 2️⃣ MAIN CONTENT (STADIUM + PLAYER POOL) */}
+      {/* 2️⃣ MAIN CONTENT */}
       <div className="flex-1 flex flex-col items-center justify-start mt-6 space-y-8 px-4">
-        {/* Stadium Section */}
+        {/* Stadium */}
         <div className="relative w-full max-w-[500px] aspect-[3/2] bg-gradient-to-b from-green-500 to-green-700 rounded-2xl shadow-lg flex items-center justify-center">
           <div className="absolute inset-0 bg-green-600 opacity-40 rounded-2xl"></div>
 
@@ -199,7 +218,7 @@ export const FantasyTeamBuilder = ({
           )}
         </div>
 
-        {/* Player Pool Section */}
+        {/* Player Pool */}
         <div className="w-full bg-white/95 backdrop-blur-sm border-t-4 border-green-600 p-6 rounded-t-2xl shadow-inner">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
             {filteredPlayers.map((p) => (
@@ -218,9 +237,7 @@ export const FantasyTeamBuilder = ({
                     <span>${p.price}M</span>
                     <span>{p.points}pts</span>
                   </div>
-                  <Badge variant="outline" className="text-xs w-full text-center">
-                    {p.position}
-                  </Badge>
+                  <Badge variant="outline" className="text-xs w-full text-center">{p.position}</Badge>
                 </div>
               </Card>
             ))}
@@ -234,6 +251,14 @@ export const FantasyTeamBuilder = ({
       {/* 3️⃣ CHAT SIDEBAR */}
       {assistantOpen && (
         <div className="fixed right-0 top-0 h-full w-80 bg-white/95 backdrop-blur-md shadow-2xl p-4 border-l border-gray-200 overflow-y-auto z-50">
+          {/* ✖️ Close button */}
+          <button
+            className="absolute top-3 right-3 p-2 rounded-full hover:bg-gray-200 transition"
+            onClick={() => setAssistantOpen(false)}
+          >
+            <X className="w-5 h-5 text-gray-600" />
+          </button>
+
           <FantasyChatbot fantasyTeam={fantasyTeam} availablePlayers={availablePlayers} />
         </div>
       )}
@@ -245,17 +270,10 @@ export const FantasyTeamBuilder = ({
             lastSwap ? "opacity-100" : "opacity-0"
           }`}
         >
-          Swapped{" "}
-          <span className="font-semibold">{lastSwap.out.name}</span> ↔️{" "}
-          <span className="font-semibold">{lastSwap.in.name}</span>
-        </div>
-      )}
-      {/* {lastSwap && (
-        <div className="fixed bottom-4 right-4 bg-yellow-100 p-3 rounded-lg shadow-lg text-sm">
           Swapped <span className="font-semibold">{lastSwap.out.name}</span> ↔️{" "}
           <span className="font-semibold">{lastSwap.in.name}</span>
         </div>
-      )} */}
+      )}
     </div>
   );
 };
