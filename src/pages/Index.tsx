@@ -149,11 +149,46 @@ const Index = () => {
     });
   };
 
+  // const handlePlayerSwap = (playerOut: Player, playerIn: Player) => {
+  //   // For now, we'll implement this as remove + add
+  //   handlePlayerRemove(playerOut);
+  //   setTimeout(() => handlePlayerAdd(playerIn), 100);
+  // };
+
   const handlePlayerSwap = (playerOut: Player, playerIn: Player) => {
-    // For now, we'll implement this as remove + add
-    handlePlayerRemove(playerOut);
-    setTimeout(() => handlePlayerAdd(playerIn), 100);
-  };
+  // Check budget constraint
+  const budgetDifference = playerIn.price - playerOut.price;
+  if (budgetDifference > gameState.fantasyTeam.remainingBudget) {
+    toast({
+      title: "Insufficient Budget",
+      description: `You need $${budgetDifference.toFixed(1)}M more to make this swap.`,
+      variant: "destructive",
+    });
+    return;
+  }
+
+  // Atomic swap - replace player in one operation
+  const newPlayers = gameState.fantasyTeam.players.map(p => 
+    p.id === playerOut.id ? playerIn : p
+  );
+  const newTotalPoints = newPlayers.reduce((sum, p) => sum + p.points, 0);
+  const newRemainingBudget = gameState.fantasyTeam.remainingBudget - budgetDifference;
+
+  setGameState(prev => ({
+    ...prev,
+    fantasyTeam: {
+      ...prev.fantasyTeam,
+      players: newPlayers,
+      totalPoints: newTotalPoints,
+      remainingBudget: newRemainingBudget,
+    },
+  }));
+
+  toast({
+    title: "Player Swapped",
+    description: `${playerOut.name} swapped with ${playerIn.name}!`,
+  });
+};
 
   const handleReset = () => {
     setGameState({
