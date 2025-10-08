@@ -1,132 +1,132 @@
-import { Player } from "@/types/cricket";
+"use client";
+
+import { useRef, useState } from "react";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { TrendingUp, Users, Target, Award } from "lucide-react";
+import { Player } from "@/types/cricket";
 
 interface PlayerCardProps {
   player: Player;
-  isSelected?: boolean;
   onSelect?: (player: Player) => void;
-  onRemove?: (player: Player) => void;
-  showAddButton?: boolean;
-  showRemoveButton?: boolean;
+  positionColor?: string;
 }
 
-export const PlayerCard = ({ 
-  player, 
-  isSelected = false, 
-  onSelect, 
-  onRemove, 
-  showAddButton = true,
-  showRemoveButton = false 
-}: PlayerCardProps) => {
-  const getPositionColor = (position: string) => {
-    switch (position.toLowerCase()) {
-      case 'batsman': return 'bg-fantasy-blue text-white';
-      case 'bowler': return 'bg-cricket-green text-white';
-      case 'wicket-keeper': return 'bg-fantasy-gold text-foreground';
-      case 'all-rounder': return 'bg-gradient-fantasy text-white';
-      default: return 'bg-secondary text-secondary-foreground';
+export const PlayerCard = ({ player, onSelect, positionColor }: PlayerCardProps) => {
+  const [showPreview, setShowPreview] = useState(false);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const pressTimer = useRef<NodeJS.Timeout | null>(null);
+
+  const handleMouseDown = () => {
+    pressTimer.current = setTimeout(() => {
+      fetchImage();
+    }, 600); // Long press threshold
+  };
+
+  const handleMouseUp = () => {
+    if (pressTimer.current) {
+      clearTimeout(pressTimer.current);
+      pressTimer.current = null;
     }
   };
 
-  const getPositionIcon = (position: string) => {
-    switch (position.toLowerCase()) {
-      case 'batsman': return <Target className="w-4 h-4" />;
-      case 'bowler': return <TrendingUp className="w-4 h-4" />;
-      case 'wicket-keeper': return <Award className="w-4 h-4" />;
-      case 'all-rounder': return <Users className="w-4 h-4" />;
-      default: return <Users className="w-4 h-4" />;
+  const handleClick = () => {
+    if (!showPreview && onSelect) onSelect(player);
+  };
+
+  const fetchImage = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      setShowPreview(true);
+
+      const res = await fetch("/api/player-image", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: player.name }),
+      });
+
+      if (!res.ok) throw new Error("Failed to fetch image");
+      const data = await res.json();
+      setImageUrl(data.imageUrl || null); // backend should return { imageUrl: "..." }
+    } catch (err: any) {
+      setError(err.message || "Error fetching image");
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const handleClosePreview = () => {
+    setShowPreview(false);
+    setImageUrl(null);
   };
 
   return (
-    <Card className={`p-4 transition-all duration-300 hover:shadow-player ${
-      isSelected ? 'ring-2 ring-fantasy-gold shadow-selected bg-gradient-to-br from-fantasy-gold/5 to-fantasy-blue/5' : ''
-    }`}>
-      <div className="flex flex-col space-y-3">
-        {/* Player Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-gradient-cricket rounded-full flex items-center justify-center text-white font-bold">
-              {player.name.split(' ').map(n => n[0]).join('').substring(0, 2)}
-            </div>
-            <div>
-              <h3 className="font-semibold text-lg">{player.name}</h3>
-              <p className="text-sm text-muted-foreground">{player.team}</p>
-            </div>
-          </div>
-          <div className="text-right">
-            <p className="text-sm text-muted-foreground">Price</p>
-            <p className="font-bold text-fantasy-gold">${player.price}M</p>
-          </div>
+    <>
+      <Card
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+        onClick={handleClick}
+        onTouchStart={handleMouseDown}
+        onTouchEnd={handleMouseUp}
+        className="group flex flex-col items-center justify-between gap-2 p-4 border border-gray-200 rounded-2xl cursor-pointer transition-all duration-200 hover:scale-[1.04] hover:shadow-lg bg-white/80 hover:bg-white"
+      >
+        <div
+          className={`w-20 h-20 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-md ${
+            positionColor || "bg-gray-400"
+          } group-hover:scale-105 transition`}
+        >
+          {player.name.split(" ").map((n) => n[0]).join("")}
         </div>
 
-        {/* Position Badge */}
-        <div className="flex items-center space-x-2">
-          <Badge className={`${getPositionColor(player.position)} border-0`}>
-            {getPositionIcon(player.position)}
-            {player.position}
-          </Badge>
-          <Badge variant="outline" className="bg-success/10 text-success border-success/20">
-            {player.points} pts
-          </Badge>
+        <div className="text-center">
+          <div className="text-sm font-semibold truncate">{player.name}</div>
+          <div className="text-xs text-gray-500">{player.team}</div>
         </div>
 
-        {/* Player Stats */}
-        <div className="grid grid-cols-2 gap-2 text-sm">
-          <div className="text-center p-2 bg-muted rounded-lg">
-            <p className="font-semibold">{player.stats.matches}</p>
-            <p className="text-muted-foreground">Matches</p>
-          </div>
-          {player.stats.runs && (
-            <div className="text-center p-2 bg-muted rounded-lg">
-              <p className="font-semibold">{player.stats.runs}</p>
-              <p className="text-muted-foreground">Runs</p>
-            </div>
-          )}
-          {player.stats.wickets && (
-            <div className="text-center p-2 bg-muted rounded-lg">
-              <p className="font-semibold">{player.stats.wickets}</p>
-              <p className="text-muted-foreground">Wickets</p>
-            </div>
-          )}
-          {player.stats.catches && (
-            <div className="text-center p-2 bg-muted rounded-lg">
-              <p className="font-semibold">{player.stats.catches}</p>
-              <p className="text-muted-foreground">Catches</p>
-            </div>
-          )}
+        <div className="flex justify-between w-full text-xs text-gray-600 mt-1">
+          <span>${player.price}M</span>
+          <span>{player.points} pts</span>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex space-x-2">
-          {showAddButton && !isSelected && onSelect && (
-            <Button 
-              onClick={() => onSelect(player)}
-              variant="cricket"
-              className="flex-1"
+        <Badge variant="outline" className="text-xs w-full text-center mt-1">
+          {player.position}
+        </Badge>
+      </Card>
+
+      {/* Preview Overlay */}
+      {showPreview && (
+        <div
+          onClick={handleClosePreview}
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50"
+        >
+          <div className="bg-white rounded-xl shadow-2xl p-6 max-w-sm w-full text-center relative">
+            {loading && <p className="text-gray-600">Loading image...</p>}
+
+            {!loading && error && (
+              <p className="text-red-500 text-sm">{error}</p>
+            )}
+
+            {!loading && !error && imageUrl && (
+              <img
+                src={imageUrl}
+                alt={`${player.name} image`}
+                className="rounded-lg mb-4 mx-auto max-h-[250px] object-contain"
+              />
+            )}
+
+            <h2 className="text-lg font-bold mb-2">{player.name}</h2>
+            <button
+              onClick={handleClosePreview}
+              className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition"
             >
-              Add Player
-            </Button>
-          )}
-          {showRemoveButton && isSelected && onRemove && (
-            <Button 
-              onClick={() => onRemove(player)}
-              variant="destructive"
-              className="flex-1"
-            >
-              Remove
-            </Button>
-          )}
-          {isSelected && !showRemoveButton && (
-            <Button variant="selected" className="flex-1" disabled>
-              Selected
-            </Button>
-          )}
+              Close
+            </button>
+          </div>
         </div>
-      </div>
-    </Card>
+      )}
+    </>
   );
 };

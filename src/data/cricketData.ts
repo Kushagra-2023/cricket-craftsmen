@@ -45,7 +45,7 @@ export const mockPlayers: Player[] = [
   {
     id: "5",
     name: "Hardik Pandya",
-    position: "All-Rounder",
+    position: "Batsman",
     team: "India",
     points: 120,
     price: 9.5,
@@ -97,7 +97,7 @@ export const mockPlayers: Player[] = [
   {
     id: "10",
     name: "Glenn Maxwell",
-    position: "All-Rounder",
+    position: "Batsman",
     team: "Australia",
     points: 118,
     price: 9.0,

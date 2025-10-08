@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 
 interface PlayerStatsData {
   name: string;
-  [key: string]: string | number;
+  imageUrl?: string; // 👈 optional field for player image
+  [key: string]: string | number | undefined;
 }
 
 interface StatsResponse {
@@ -13,7 +14,7 @@ interface StatsResponse {
 }
 
 interface PlayerStatsProps {
-  playerNames: string[]; // variable length
+  playerNames: string[];
 }
 
 export const PlayerStats: React.FC<PlayerStatsProps> = ({ playerNames }) => {
@@ -54,15 +55,32 @@ export const PlayerStats: React.FC<PlayerStatsProps> = ({ playerNames }) => {
         } gap-6`}
       >
         {stats.players.map((player, idx) => (
-          <div key={idx} className="p-4 border rounded shadow">
-            <h3 className="text-xl font-semibold mb-2">{player.name}</h3>
-            {Object.entries(player).map(([key, value]) =>
-              key !== "name" ? (
-                <p key={key}>
-                  <strong>{key.replace(/([A-Z])/g, " $1")}:</strong> {value}
-                </p>
-              ) : null
+          <div key={idx} className="p-4 border rounded shadow bg-white">
+            {/* 👇 Player image (if available) */}
+            {player.imageUrl && (
+              <img
+                src={player.imageUrl}
+                alt={player.name}
+                className="w-32 h-32 object-cover rounded-full mx-auto mb-3 border"
+              />
             )}
+
+            <h3 className="text-xl font-semibold mb-2 text-center">
+              {player.name}
+            </h3>
+
+            <div className="space-y-1 text-sm">
+              {Object.entries(player).map(([key, value]) =>
+                key !== "name" && key !== "imageUrl" ? (
+                  <p key={key} className="flex justify-between">
+                    <span className="font-medium capitalize">
+                      {key.replace(/([A-Z])/g, " $1")}:
+                    </span>
+                    <span>{value}</span>
+                  </p>
+                ) : null
+              )}
+            </div>
           </div>
         ))}
       </div>

@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Trophy, DollarSign, Users, RotateCcw, X, Shuffle, MessageSquare } from "lucide-react";
 import { FantasyChatbot } from "./LLM";
 import * as Toast from "./ui/toast";
+import { PlayerCard } from "./PlayerCard";
 
 interface FantasyTeamBuilderProps {
   availablePlayers: Player[];
@@ -63,39 +64,61 @@ export const FantasyTeamBuilder = ({
     "All-Rounder": "bg-purple-500",
   };
 
+  // const getFieldPosition = (player: Player) => {
+  //   const positions: Record<string, any[]> = {
+  //     "Wicket-Keeper": [{ bottom: "12%", left: "50%", transform: "translateX(-50%)" }],
+  //     Batsman: [
+  //       { bottom: "30%", left: "15%" },
+  //       { bottom: "30%", left: "35%" },
+  //       { bottom: "30%", right: "15%" },
+  //       { bottom: "30%", right: "35%" },
+  //       { bottom: "45%", left: "50%", transform: "translateX(-50%)" },
+  //     ],
+  //     "All-Rounder": [
+  //       { bottom: "60%", left: "20%" },
+  //       { bottom: "60%", right: "20%" },
+  //       { bottom: "70%", left: "50%", transform: "translateX(-50%)" },
+  //     ],
+  //     Bowler: [
+  //       { bottom: "85%", left: "20%" },
+  //       { bottom: "85%", right: "20%" },
+  //       { bottom: "90%", left: "50%", transform: "translateX(-50%)" },
+  //     ],
+  //   };
+  //   const playersByPosition = fantasyTeam.players.filter(
+  //     (p) => p.position === player.position
+  //   );
+  //   const idx = playersByPosition.findIndex((p) => p.id === player.id);
+  //   return (
+  //     positions[player.position]?.[idx] ?? {
+  //       bottom: "50%",
+  //       left: "50%",
+  //       transform: "translateX(-50%)",
+  //     }
+  //   );
+  // };
+
   const getFieldPosition = (player: Player) => {
-    const positions: Record<string, any[]> = {
-      "Wicket-Keeper": [{ bottom: "12%", left: "50%", transform: "translateX(-50%)" }],
-      Batsman: [
-        { bottom: "30%", left: "15%" },
-        { bottom: "30%", left: "35%" },
-        { bottom: "30%", right: "15%" },
-        { bottom: "30%", right: "35%" },
-        { bottom: "45%", left: "50%", transform: "translateX(-50%)" },
-      ],
-      "All-Rounder": [
-        { bottom: "60%", left: "20%" },
-        { bottom: "60%", right: "20%" },
-        { bottom: "70%", left: "50%", transform: "translateX(-50%)" },
-      ],
-      Bowler: [
-        { bottom: "85%", left: "20%" },
-        { bottom: "85%", right: "20%" },
-        { bottom: "90%", left: "50%", transform: "translateX(-50%)" },
-      ],
-    };
-    const playersByPosition = fantasyTeam.players.filter(
-      (p) => p.position === player.position
-    );
-    const idx = playersByPosition.findIndex((p) => p.id === player.id);
-    return (
-      positions[player.position]?.[idx] ?? {
-        bottom: "50%",
-        left: "50%",
-        transform: "translateX(-50%)",
-      }
-    );
+  const totalPlayers = fantasyTeam.players.length;
+  const idx = fantasyTeam.players.findIndex((p) => p.id === player.id);
+
+  // Two rows: first row 6, second row 5
+  const row = idx < 6 ? 0 : 1;
+  const posInRow = row === 0 ? idx : idx - 6;
+  const maxInRow = row === 0 ? 6 : 5;
+
+  const topPercent = row === 0 ? 30 : 60; // 30% from top for first row, 60% for second
+  const horizontalSpacing = 100 / (maxInRow + 1); // equal spacing
+
+  const leftPercent = horizontalSpacing * (posInRow + 1);
+
+  return {
+    top: `${topPercent}%`,
+    left: `${leftPercent}%`,
+    transform: "translateX(-50%)",
   };
+};
+
 
   const sortedPlayers = availablePlayers
     .filter((p) => !fantasyTeam.players.some((fp) => fp.id === p.id))
@@ -219,7 +242,34 @@ export const FantasyTeamBuilder = ({
         </div>
 
         {/* Player Pool */}
-        <div className="w-full bg-white/95 backdrop-blur-sm border-t-4 border-green-600 p-6 rounded-t-2xl shadow-inner">
+        <div className="w-full bg-gradient-to-b from-white/90 to-gray-50 backdrop-blur-sm border-t-4 border-green-600 p-6 rounded-t-3xl shadow-inner relative">
+          <h2 className="text-xl font-semibold mb-4 text-gray-800 flex items-center gap-2">
+            Player Pool
+            <span className="text-sm text-gray-500 font-normal">
+              ({filteredPlayers.length} available)
+            </span>
+          </h2>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-4 overflow-y-auto max-h-[65vh] px-1">
+            {filteredPlayers.length > 0 ? (
+              filteredPlayers.map((p) => (
+                <PlayerCard
+                  key={p.id}
+                  player={p}
+                  positionColor={positionColors[p.position]}
+                  onSelect={handlePoolPlayerClick}
+                />
+              ))
+            ) : (
+              <div className="text-center py-8 text-gray-500 col-span-full">
+                No players available
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Player Pool */}
+        {/* <div className="w-full bg-white/95 backdrop-blur-sm border-t-4 border-green-600 p-6 rounded-t-2xl shadow-inner">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
             {filteredPlayers.map((p) => (
               <Card
@@ -245,7 +295,7 @@ export const FantasyTeamBuilder = ({
               <div className="text-center py-8 text-gray-500 col-span-full">No players available</div>
             )}
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* 3️⃣ CHAT SIDEBAR */}
