@@ -282,11 +282,19 @@ export const FantasyTeamBuilder = ({
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-4 overflow-y-auto max-h-[65vh] px-1">
             {filteredPlayers.length > 0 ? (
               filteredPlayers.map((p) => (
+                // <PlayerCard
+                //   key={p.id}
+                //   player={p}
+                //   positionColor={positionColors[p.position]}
+                //   onSelect={handlePoolPlayerClick}
+                // />
                 <PlayerCard
                   key={p.id}
                   player={p}
                   positionColor={positionColors[p.position]}
                   onSelect={handlePoolPlayerClick}
+                  swapMode={swapMode}                 // pass swap mode
+                  selectedPlayer={selectedPlayer}     // pass currently selected player
                 />
               ))
             ) : (
