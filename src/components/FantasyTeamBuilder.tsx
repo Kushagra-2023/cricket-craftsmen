@@ -27,31 +27,60 @@ export const FantasyTeamBuilder = ({
   const [loadingDefaultTeam, setLoadingDefaultTeam] = useState(false);
 
   useEffect(() => {
-    const fetchDefaultTeam = async () => {
-      setLoadingDefaultTeam(true);
-      try {
-        // You can send IDs or names
-        const response = await fetch("/api/default-team", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            // Example: sending available player IDs
-            playerIds: availablePlayers.map((p) => p.id),
-          }),
-        });
-        const data: { team: Player[] } = await response.json();
+  const fetchDefaultTeam = async () => {
+    setLoadingDefaultTeam(true);
+    try {
+      const response = await fetch("/api/default-team", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          players: availablePlayers.map((p) => ({
+            name: p.name,
+            price: p.price,
+          })),
+        }),
+      });
+      const data: { team: Player[] } = await response.json();
 
-        // Add each player from default team
-        data.team.forEach((player) => onPlayerAdd(player));
-      } catch (err) {
-        console.error("Failed to fetch default team:", err);
-      } finally {
-        setLoadingDefaultTeam(false);
-      }
-    };
+      // Add each player from default team
+      data.team.forEach((player) => onPlayerAdd(player));
+    } catch (err) {
+      console.error("Failed to fetch default team:", err);
+    } finally {
+      setLoadingDefaultTeam(false);
+    }
+  };
 
-    fetchDefaultTeam();
-  }, []); // run once on mount
+  fetchDefaultTeam();
+}, []); // run once on mount
+
+
+  // useEffect(() => {
+  //   const fetchDefaultTeam = async () => {
+  //     setLoadingDefaultTeam(true);
+  //     try {
+  //       // You can send IDs or names
+  //       const response = await fetch("/api/default-team", {
+  //         method: "POST",
+  //         headers: { "Content-Type": "application/json" },
+  //         body: JSON.stringify({
+  //           // Example: sending available player IDs
+  //           playerIds: availablePlayers.map((p) => p.id),
+  //         }),
+  //       });
+  //       const data: { team: Player[] } = await response.json();
+
+  //       // Add each player from default team
+  //       data.team.forEach((player) => onPlayerAdd(player));
+  //     } catch (err) {
+  //       console.error("Failed to fetch default team:", err);
+  //     } finally {
+  //       setLoadingDefaultTeam(false);
+  //     }
+  //   };
+
+  //   fetchDefaultTeam();
+  // }, []); // run once on mount
 
 
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
@@ -211,8 +240,8 @@ export const FantasyTeamBuilder = ({
           </div>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-4 max-w-4xl mx-auto">
-          {["Batsman", "Bowler", "Wicket-Keeper", "All-Rounder"].map((pos) => (
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-4 max-w-4xl mx-auto">
+          {["Batsman", "Bowler", "All-Rounder"].map((pos) => (
             <Badge
               key={pos}
               variant="outline"
