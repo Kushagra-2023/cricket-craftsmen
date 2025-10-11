@@ -226,7 +226,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-cricket-green/5 to-fantasy-blue/5">
       {/* Header */}
-      <div className="bg-white/80 backdrop-blur-sm border-b sticky top-0 z-50">
+      <div className="bg-white/95 backdrop-blur-sm border-b sticky top-0 z-50">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
@@ -243,7 +243,7 @@ const Index = () => {
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back
               </Button>
-              <h1 className="text-2xl font-bold bg-gradient-cricket bg-clip-text text-transparent">
+              <h1 className="text-2xl font-bold text-black">
                 Fantasy Cricket
               </h1>
             </div>

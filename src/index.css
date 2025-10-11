@@ -139,6 +139,15 @@
   }
 }
 
+@font-face {
+  font-family: 'Redzone Classic';
+  src: url('/path/to/redzone-classic.woff2') format('woff2'),
+       url('/path/to/redzone-classic.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
 @layer base {
   * {
     @apply border-border;
@@ -146,5 +155,6 @@
 
   body {
     @apply bg-background text-foreground;
+    font-family: 'Redzone Classic', sans-serif;
   }
 }
