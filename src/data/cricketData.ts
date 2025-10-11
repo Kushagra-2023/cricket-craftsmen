@@ -1,4 +1,5 @@
 import { Team, Player } from "@/types/cricket";
+import { fetchPlayerImage } from "@/lib/fetchPlayerImage";
 
 export const mockPlayers: Player[] = [
   // India Players
@@ -76,7 +77,7 @@ export const mockPlayers: Player[] = [
   },
   {
     id: "8",
-    name: "Pat Cummins",
+    name: "PJ Cummins",
     position: "Bowler",
     team: "Australia",
     points: 130,

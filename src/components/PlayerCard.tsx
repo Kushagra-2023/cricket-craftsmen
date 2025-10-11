@@ -36,26 +36,32 @@ export const PlayerCard = ({ player, onSelect, positionColor }: PlayerCardProps)
   };
 
   const fetchImage = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      setShowPreview(true);
+  try {
+    setLoading(true);
+    setError(null);
+    setShowPreview(true);
 
-      const res = await fetch("/api/player-image", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: player.name }),
-      });
+    const res = await fetch(
+      `http://127.0.0.1:8000/players/summary/${encodeURIComponent(player.name)}`,
+      {
+        method: "POST", // use GET if backend is @app.get
+      }
+    );
 
-      if (!res.ok) throw new Error("Failed to fetch image");
-      const data = await res.json();
-      setImageUrl(data.imageUrl || null); // backend should return { imageUrl: "..." }
-    } catch (err: any) {
-      setError(err.message || "Error fetching image");
-    } finally {
-      setLoading(false);
-    }
-  };
+    if (!res.ok) throw new Error("Failed to fetch image");
+
+    // Convert raw response to blob
+    const blob = await res.blob();
+    const imageObjectUrl = URL.createObjectURL(blob);
+
+    setImageUrl(imageObjectUrl);
+  } catch (err: any) {
+    setError(err.message || "Error fetching image");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const handleClosePreview = () => {
     setShowPreview(false);

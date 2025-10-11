@@ -23,10 +23,10 @@ export const TeamSelector = ({
   return (
     <div className="space-y-6 relative z-10"> {/* ✅ Keeps this layer above dashboard */}
       <div className="text-center">
-        <h2 className="text-3xl font-bold bg-gradient-cricket bg-clip-text text-transparent">
+        <h2 className="text-3xl font-bold text-white">
           Select Your Teams
         </h2>
-        <p className="text-muted-foreground mt-2">
+        <p className="text-white mt-2">
           Choose {maxSelections} teams to build your fantasy squad from
         </p>
       </div>
@@ -80,14 +80,6 @@ export const TeamSelector = ({
             </Card>
           );
         })}
-      </div>
-
-      {/* ✅ Info Strip always on top */}
-      <div className="sticky bottom-0 z-50 bg-background/80 backdrop-blur-md border-t border-border p-4 rounded-t-2xl shadow-md flex items-center justify-around">
-        <span className="font-semibold text-sm">🏏 Batsmen: 3</span>
-        <span className="font-semibold text-sm">🎯 Bowlers: 3</span>
-        <span className="font-semibold text-sm">⚡ All-rounders: 2</span>
-        <span className="font-semibold text-sm">🧤 Keepers: 1</span>
       </div>
     </div>
   );

@@ -43,10 +43,10 @@ export const FormatSelector = ({ selectedFormat, onFormatSelect }: FormatSelecto
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-3xl font-bold bg-gradient-cricket bg-clip-text text-transparent">
-          Choose Cricket Format
-        </h2>
-        <p className="text-muted-foreground mt-2">
+      <h2 className="text-3xl font-bold text-white">
+        Choose Cricket Format
+      </h2>
+        <p className="text-white mt-2">
           Select your preferred cricket format to build your fantasy team
         </p>
       </div>
