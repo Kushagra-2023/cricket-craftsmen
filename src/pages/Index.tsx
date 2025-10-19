@@ -244,7 +244,7 @@ const Index = () => {
                 Back
               </Button>
               <h1 className="text-2xl font-bold text-black">
-                Fantasy Cricket
+                DREAM 11
               </h1>
             </div>
             <div className="flex items-center space-x-2">

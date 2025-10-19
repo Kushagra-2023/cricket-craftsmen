@@ -19,13 +19,33 @@ export const CricketHero = ({ onGetStarted }: CricketHeroProps) => {
       
       {/* Content */}
       <div className="relative z-10 text-center text-white max-w-4xl mx-auto px-6">
-        <div className="flex items-center justify-center space-x-2 mb-6">
+        {/* <div className="flex items-center justify-center space-x-2 mb-6">
           <Trophy className="w-8 h-8 text-fantasy-gold" />
           <h1 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-fantasy-gold via-white to-fantasy-blue bg-clip-text text-transparent">
-            Fantasy Cricket
+            DREAM 11
           </h1>
           <Trophy className="w-8 h-8 text-fantasy-gold" />
+        </div> */}
+        <div className="flex items-center justify-center space-x-1 mb-1">
+          {/* <Trophy className="w-8 h-8 text-fantasy-gold" /> */}
+
+          {/* Dream11 Logo */}
+            <img
+              src="/logo.png"
+              alt="Dream11 Logo"
+              className="w-[18rem] h-[18rem] md:w-[22rem] md:h-[20rem] object-contain"
+            />
+
+
+
+{/* 
+          <h1 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-fantasy-gold via-white to-fantasy-blue bg-clip-text text-transparent">
+            DREAM 11
+          </h1> */}
+
+          {/* <Trophy className="w-8 h-8 text-fantasy-gold" /> */}
         </div>
+
         
         <p className="text-xl md:text-2xl mb-8 text-white/90 leading-relaxed">
           Build your dream cricket team, compete with friends, and prove your cricket knowledge. 

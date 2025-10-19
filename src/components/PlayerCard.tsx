@@ -210,6 +210,21 @@ export const PlayerCard = ({
     if (!showPreview && onSelect) onSelect(player);
   };
 
+  // Mapping of player names to images in /public
+  const playerImages: Record<string, string> = {
+    "V Kohli": "/virat.jpg",
+    "MS Dhoni": "/dhoni.jpeg",
+    "DA Warner": "/warner.jpg",
+    "SR Tendulkar": "/sachin.jpg",
+    "RT Ponting": "/ponting.webp",
+    "V Sehwag": "/sehwag.jpg",
+    "B Lee": "/lee.jpeg",
+    // add more players here
+  };
+
+const imageSrc = playerImages[player.name]; // undefined if not present
+
+
   // const fetchImage = async () => {
   //   try {
   //     setLoading(true);
@@ -246,32 +261,44 @@ export const PlayerCard = ({
     setError(null);
     setShowPreview(true);
 
-    let res: Response;
+    // let res: Response;
 
-    if (swapMode && selectedPlayer) {
-      // 🔥 Swap mode: send POST with JSON body
-      res = await fetch("http://127.0.0.1:8000/players/comparison", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          player1_name: selectedPlayer.name,
-          player2_name: player.name,
-        }),
-      });
-    } else {
-      // 🔥 Normal mode: fetch single player summary
-      res = await fetch(
-        `http://127.0.0.1:8000/players/summary/${encodeURIComponent(player.name)}`,
-        { method: "POST" } // or GET if your backend supports
-      );
-    }
+    // if (swapMode && selectedPlayer) {
+    //   // 🔥 Swap mode: send POST with JSON body
+    //   res = await fetch("http://127.0.0.1:8000/players/comparison", {
+    //     method: "POST",
+    //     headers: { "Content-Type": "application/json" },
+    //     body: JSON.stringify({
+    //       player1_name: selectedPlayer.name,
+    //       player2_name: player.name,
+    //     }),
+    //   });
+    // } else {
+    //   // 🔥 Normal mode: fetch single player summary
+    //   res = await fetch(
+    //     `http://127.0.0.1:8000/players/summary/${encodeURIComponent(player.name)}`,
+    //     { method: "POST" } // or GET if your backend supports
+    //   );
+    // }
 
-    if (!res.ok) throw new Error("Failed to fetch image");
+    // if (!res.ok) throw new Error("Failed to fetch image");
 
-    const blob = await res.blob();
-    const imageObjectUrl = URL.createObjectURL(blob);
+    // const blob = await res.blob();
+    // const imageObjectUrl = URL.createObjectURL(blob);
 
-    setImageUrl(imageObjectUrl);
+    // setImageUrl(imageObjectUrl);
+    let imageObjectUrl: string;
+
+if (swapMode && selectedPlayer) {
+  // 🔥 Swap mode: use hardcoded comparison image
+  imageObjectUrl = "/vd.png";
+} else {
+  // 🔥 Normal mode: single player
+  imageObjectUrl = "/v.png";
+}
+
+// Then just set it
+setImageUrl(imageObjectUrl);
   } catch (err: any) {
     setError(err.message || "Error fetching image");
   } finally {
@@ -296,7 +323,7 @@ export const PlayerCard = ({
         onTouchEnd={handleMouseUp}
         className="group flex flex-col items-center justify-between gap-2 p-4 border border-gray-200 rounded-2xl cursor-pointer transition-all duration-200 hover:scale-[1.04] hover:shadow-lg bg-white/80 hover:bg-white"
       >
-        <div
+        {/* <div
           className={`w-20 h-20 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-md ${
             positionColor || "bg-gray-400"
           } group-hover:scale-105 transition`}
@@ -305,7 +332,23 @@ export const PlayerCard = ({
             .split(" ")
             .map((n) => n[0])
             .join("")}
+        </div> */}
+        <div
+          className={`w-20 h-20 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-md relative overflow-hidden ${
+            positionColor || "bg-gray-400"
+          }`}
+        >
+          {imageSrc ? (
+            <img
+              src={imageSrc}
+              alt={player.name}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <span>{player.name[0]}</span> // fallback to first letter
+          )}
         </div>
+
 
         <div className="text-center">
           <div className="text-sm font-semibold truncate">{player.name}</div>
